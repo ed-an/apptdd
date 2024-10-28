@@ -1,0 +1,12 @@
+// Fonts
+@import url('https://fonts.bunny.net/css?family=Nunito:400,600,700&display=swap');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+.card-box-app {
+    @apply .bg-white .p-3 .rounded-3 .shadow;
+}

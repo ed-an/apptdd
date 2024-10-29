@@ -10,8 +10,8 @@ use Illuminate\Support\Arr;
 class Project extends Model
 {
     use HasFactory;
+    use RecordsActivity;
 
-    #use RecordActivity;
 
     /**
      * Attributes to guard against mass assignment.
@@ -19,7 +19,7 @@ class Project extends Model
      * @var array
      */
     protected $guarded = [];
-    public  $old = [];
+
 
     /**
      *  The path to the project.
@@ -60,37 +60,6 @@ class Project extends Model
     public function addTask($body)
     {
         return $this->tasks()->create(compact('body'));
-    }
-
-    /**
-     * Record activity for a project.
-     *
-     * @param string $description
-     */
-    public function recordActivity($description)
-    {
-
-        $this->activity()->create([
-            'description' => $description,
-            'changes' => $this->activityChanges($description)
-        ]);
-    }
-
-    /**
-     * Fetch the changes to the model.
-     *
-     * @param  string $description
-     * @return array|null
-     */
-    protected function activityChanges($description)
-    {
-
-        if ($description == 'updated') {
-            return [
-                'before' => Arr::except(array_diff($this->old, $this->getAttributes()), 'updated_at'),
-                'after' => Arr::except($this->getChanges(), 'updated_at')
-            ];
-        }
     }
 
 

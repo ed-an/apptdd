@@ -58,14 +58,47 @@ class ManagerProjectsTest extends TestCase
     /**
      * @test
      */
+    public function unautorized_user_cannot_delete_a_project()
+    {
+
+
+        $project = ProjectFactory::create();
+
+        $this->delete($project->path())
+            ->assertRedirect('/login');
+        $this->signIn();
+
+        $this->delete($project->path())->assertStatus(403);
+
+
+    }
+    /**
+     * @test
+     */
+    public function it_user_delete_a_project()
+    {
+
+        $this->withoutExceptionHandling();
+        $project = ProjectFactory::create();
+
+        $this->actingAs($project->owner)
+            ->delete($project->path())
+            ->assertRedirect('/projects');
+
+        $this->assertDatabaseMissing('projects', $project->only('id'));
+    }
+
+    /**
+     * @test
+     */
     public function a_user_can_update_a_project() : void
     {
 
         $project = ProjectFactory::create();
         $attributes = [ 'title'=>'changed', 'description'=>'changed','notes' => 'Changed' ];
         $this->actingAs($project->owner)
-            ->patch($project->path(), $attributes);
-        $this->patch($project->path(), $attributes);
+            ->patch($project->path(), $attributes)
+           ->assertRedirect($project->path());
 
 
         $this->get($project->path().'/edit')->assertOk();

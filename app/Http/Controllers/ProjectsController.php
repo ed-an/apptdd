@@ -11,7 +11,9 @@ class ProjectsController extends Controller
     public function index(): \Illuminate\View\View
     {
 
-        $projects = auth()->user()->projects;
+        //$projects = auth()->user()->projects;
+        $projects = auth()->user()->accessibleProjects();
+
 
         return view('projects.index', compact('projects'));
     }

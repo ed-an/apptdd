@@ -7,9 +7,22 @@
                 <a href="/projects" class="text-muted small fw-normal text-decoration-none"> My
                     Projects</a> {{' / '}} {{$project->title}}
             </p>
-            <a href="{{$project->path(). '/edit'}}" class="btn btn-primary me-2">Edit project</a>
+            <div class="d-flex align-items-center">
+                @foreach(@$project->members as $member)
+                    <img src="{{gravatar_url($member->email) }}"
+                         alt="{{$member->name}}'s avatar"
+                         class="rounded-circle w-8 h-8 me-2">
+                @endforeach
+                    <img src="{{gravatar_url($project->owner->email)}}"
+                         alt="{{$project->owner->name}}'s avatar"
+                         class="rounded-circle w-8 h-8 me-2">
+
+                <a href="{{$project->path(). '/edit'}}" class="btn btn-primary me-auto ">Edit project</a>
+            </div>
+
         </div>
     </header>
+
     <main>
         <div class="d-lg-flex">
             <div class="col-lg-9 px-3 mx-n3 mb-3">

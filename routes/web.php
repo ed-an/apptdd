@@ -16,6 +16,7 @@ use App\Http\Controllers\ProjectsController;
 */
 
 
+
 Route::get('/', function () {
     return view('welcome');
 });

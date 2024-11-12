@@ -65,21 +65,19 @@
                                   placeholder="Anything special that you want to make a note of">{{$project->notes}}</textarea>
                         <button type="submit" class="btn btn-primary me-2">Save</button>
                     </form>
-
-                    @if($errors->any())
-                        <div class="mb-3 mt-3">
-                            @foreach($errors->all() as $error)
-                                <li class="small text-danger">{{$error}}</li>
-                            @endforeach
-                        </div>
-                    @endif
+                    @include('errors')
                 </div>
             </div>
 
-            <div class="w-35 px-3">
+            <div class="col-lg-3 px-3 py-lg-5">
                 @include('projects.card')
                 @include('projects.activity.card')
-            </div>
+
+                @can('manage',$project)
+                    @include('projects.invite')
+                @endif
+
+
         </div>
     </main>
 

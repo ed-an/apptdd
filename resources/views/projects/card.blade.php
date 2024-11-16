@@ -6,6 +6,8 @@
 
         </h3>
         <div class="text-secondary mb-4 flex-fill">{{Str::limit($project->description,100)}}</div>
+
+        @can('manage',$project)
         <footer >
             <form action="{{$project->path()}}" method="POST" class="text-end">
                 @method('DELETE')
@@ -13,4 +15,5 @@
                 <button type="submit" class="small">Delete</button>
             </form>
         </footer >
+        @endcan
     </div>

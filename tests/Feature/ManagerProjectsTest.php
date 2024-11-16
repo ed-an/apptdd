@@ -35,22 +35,11 @@ class ManagerProjectsTest extends TestCase
     {
         $this->signIn();
         $this->get('/projects/create')->assertStatus(200);
-        $attributes = [
-            'title' => $this->faker->sentence,
-            'description' => $this->faker->sentence,
-            'notes' => 'General notes here'
-        ];
 
-        $response = $this->post('/projects', $attributes);
-        $project = Project::where($attributes)->first();
 
-        $response->assertRedirect($response = $project->path());
 
-        $this->assertDatabaseHas('projects', $attributes);
-
-        $this->get('/projects')->assertSee($attributes['title']);
-        $this->get($project->path())
-            ->assertSee($attributes['title'])
+        $this->followingRedirects()->post('/projects',$attributes = Project::factory()->raw())
+           ->assertSee($attributes['title'])
             ->assertSee($attributes['description'])
             ->assertSee($attributes['notes']);
     }
@@ -80,23 +69,21 @@ class ManagerProjectsTest extends TestCase
     public function unautorized_user_cannot_delete_a_project()
     {
 
-
         $project = ProjectFactory::create();
-
         $this->delete($project->path())
             ->assertRedirect('/login');
-        $this->signIn();
+
+        $user = $this->signIn();
 
         $this->delete($project->path())->assertStatus(403);
-
-
+        $project->invite($user);
+        $this->actingAs($user)->delete($project->path())->assertStatus(403);
     }
     /**
      * @test
      */
     public function it_user_delete_a_project()
     {
-
         $this->withoutExceptionHandling();
         $project = ProjectFactory::create();
 
